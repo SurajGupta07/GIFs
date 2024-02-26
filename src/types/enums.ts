@@ -1,0 +1,29 @@
+export enum ROUTES {
+  home = 'Home',
+}
+
+export enum CONSTANTS {
+  SERVER_RESOURCE_NOT_FOUND = "Oops! our system's are fluctuating. Do not worry, Best minds are at work.",
+}
+
+export enum EReqMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  PATCH = 'PATCH',
+}
+
+export enum EGIFS {
+  TRENDING_GIFS_SUCCESS = 'TRENDING_GIFS_SUCCESS',
+  TRENDING_GIFS_LOADING = 'TRENDING_GIFS_LOADING',
+  TRENDING_GIFS_FAILURE = 'TRENDING_GIFS_FAILURE',
+  SEARCH_GIFS_SUCCESS = 'SEARCH_GIFS_SUCCESS',
+  SEARCH_GIFS_FAILURE = 'SEARCH_GIFS_FAILURE',
+  REFRESH_GIFS_SUCCESS = 'REFRESH_GIFS_SUCCESS',
+}
+
+export enum ETHEME {
+  LIGHT_MODE = 'LIGHT_MODE',
+  DARK_MODE = 'DARK_MODE',
+}
