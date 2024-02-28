@@ -87,4 +87,5 @@ export type TGifsItem = {
 
 export type TGifsInitialState = {
   trendingGifs: TGifsStates;
+  searchGifs: TGifsStates;
 };

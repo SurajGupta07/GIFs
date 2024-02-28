@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, TextInput, View} from 'react-native';
+import {FlatList, Pressable, TextInput, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {CustomButton, Loader} from '../../components';
 import {useGifs} from '../../context/gifsContext';
@@ -13,19 +13,31 @@ export const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   const [offset, setOffset] = useState<number>(0);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const {fetchTrendingGifs, searchGifs, refreshGifs} = useVideoData();
   const {state} = useGifs();
   const {
-    trendingGifs: {data, loading, error},
+    trendingGifs: {
+      data: trendingData,
+      loading: trendingLoading,
+      error: trendingError,
+    },
+    searchGifs: {data: searchData, loading: searchLoading, error: searchError},
   } = state;
   const {backgroundColor, setColorTheme, colorTheme, textColor} = useTheme();
-
   const styles = useStyles(backgroundColor, textColor);
 
   useEffect(() => {
     fetchTrendingGifs(offset, setLoadingMore);
   }, [offset]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      searchGifs(searchText);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchText]);
 
   const toggleTheme = () => {
     setColorTheme(
@@ -40,33 +52,35 @@ export const Home: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      searchGifs(searchText);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchText]);
+  const handleGifPress = (id: string) =>
+    setSelectedId(id === selectedId ? null : id);
 
   const renderGifs = ({item}: TGifsItem) => {
+    const isSelected = selectedId === item.id;
+    const source = isSelected
+      ? item.images.original.url
+      : item.images.preview.mp4;
     return (
-      <View style={styles.gifsContainer}>
+      <Pressable
+        style={styles.gifsContainer}
+        onPress={() => handleGifPress(item.id)}>
         <FastImage
           style={styles.gif}
-          source={{uri: item.images.original.url}}
+          source={{uri: source}}
           resizeMode={FastImage.resizeMode.contain}
         />
-      </View>
+      </Pressable>
     );
   };
 
   return (
     <View style={styles.container}>
-      {loading === true && (
+      {(trendingLoading || searchLoading) && (
         <View style={styles.loader}>
           <Loader />
         </View>
       )}
-      {!loading && !error && (
+      {!trendingLoading && !trendingError && !searchLoading && !searchError && (
         <>
           <View style={styles.flexRow}>
             <TextInput
@@ -80,20 +94,18 @@ export const Home: React.FC = () => {
               returnKeyType="done"
               placeholderTextColor={textColor}
             />
-            <View style={styles.flexEnd}>
-              <CustomButton
-                onClick={toggleTheme}
-                title={colorTheme === ETHEME.LIGHT_MODE ? 'Dark' : 'Light'}
-                btnStyles={styles.btn}
-              />
-            </View>
+            <CustomButton
+              onClick={toggleTheme}
+              title={colorTheme === ETHEME.LIGHT_MODE ? 'Dark' : 'Light'}
+              btnStyles={styles.btn}
+            />
           </View>
           <FlatList
-            data={data}
+            data={searchText ? searchData : trendingData}
             renderItem={renderGifs}
             keyExtractor={item => item.id}
             numColumns={2}
-            refreshing={loading}
+            refreshing={searchText ? searchLoading : trendingLoading}
             onRefresh={refreshGifs}
             showsVerticalScrollIndicator={false}
             onEndReached={handleLoadMore}

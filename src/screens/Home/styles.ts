@@ -6,9 +6,9 @@ export const useStyles = (backgroundColor: string, textColor: string) =>
   StyleSheet.create({
     flexRow: {
       flexDirection: 'row',
+      justifyContent: 'space-between',
     },
     flexEnd: {
-      flex: 1,
       alignItems: 'flex-end',
     },
     loader: {
@@ -29,7 +29,6 @@ export const useStyles = (backgroundColor: string, textColor: string) =>
       height: dimensions.viewHeight(40),
     },
     gif: {
-      borderWidth: 1,
       height: dimensions.viewHeight(150),
       width: dimensions.viewWidth(150),
     },

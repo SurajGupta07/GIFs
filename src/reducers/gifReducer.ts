@@ -10,6 +10,7 @@ export type Action = {
 
 export const gifState: TGifsInitialState = {
   trendingGifs: {data: [], loading: true, error: false, errorMessage: null},
+  searchGifs: {data: [], loading: true, error: false, errorMessage: null},
 };
 
 export const gifsReducer: Reducer<TGifsInitialState, Action> = (
@@ -37,7 +38,6 @@ export const gifsReducer: Reducer<TGifsInitialState, Action> = (
         },
       };
     case EGIFS.TRENDING_GIFS_FAILURE:
-    case EGIFS.SEARCH_GIFS_FAILURE:
       return {
         ...state,
         trendingGifs: {
@@ -49,10 +49,19 @@ export const gifsReducer: Reducer<TGifsInitialState, Action> = (
         },
       };
     case EGIFS.SEARCH_GIFS_SUCCESS:
+      return {
+        ...state,
+        searchGifs: {
+          loading: false,
+          data: action?.payload,
+          error: false,
+        },
+      };
     case EGIFS.REFRESH_GIFS_SUCCESS:
       return {
         ...state,
         trendingGifs: {
+          ...state.trendingGifs,
           loading: false,
           data: action?.payload,
           error: false,
