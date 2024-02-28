@@ -18,7 +18,7 @@ export const AppStack: React.FC = () => {
         options={{
           headerStyle: {backgroundColor: theme.palette.dark.medium},
           headerTitleStyle: {color: theme.palette.white.main},
-          headerTitleAlign: 'left',
+          headerTitleAlign: 'center',
           title: 'GIPHY',
         }}
       />

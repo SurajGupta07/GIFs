@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated, Easing, StyleSheet, View} from 'react-native';
 import {theme} from '../../theme';
+import dimensions from '../../utils/dimensions';
 
 const startRotationAnimation = (
   durationMs: number,
@@ -46,7 +47,7 @@ export const Loader = (): JSX.Element => {
   );
 };
 
-const height = 44;
+const height = dimensions.viewHeight(44);
 
 const styles = StyleSheet.create({
   container: {
