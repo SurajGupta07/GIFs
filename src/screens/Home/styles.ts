@@ -21,7 +21,7 @@ export const useStyles = (backgroundColor: string, textColor: string) =>
     },
     container: {
       flex: 1,
-      paddingHorizontal: theme.spacing.tinyWidth,
+      paddingHorizontal: theme.spacing.normalWidth,
       paddingVertical: theme.spacing.averageHeight,
       backgroundColor: backgroundColor,
     },
@@ -44,5 +44,9 @@ export const useStyles = (backgroundColor: string, textColor: string) =>
     gifsContainer: {
       marginVertical: theme.spacing.averageHeight,
       marginRight: theme.spacing.averageWidth,
+    },
+    btnContainer: {
+      width: dimensions.viewWidth(100),
+      alignItems: 'center',
     },
   });

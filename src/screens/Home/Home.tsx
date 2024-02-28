@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Pressable, TextInput, View} from 'react-native';
+import {FlatList, Pressable, Share, TextInput, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {CustomButton, Loader} from '../../components';
 import {useGifs} from '../../context/gifsContext';
@@ -37,7 +37,7 @@ export const Home: React.FC = () => {
       searchGifs(searchText);
     }, 500);
     return () => clearTimeout(timer);
-  }, [searchText]);
+  }, [searchText, searchGifs]);
 
   const toggleTheme = () => {
     setColorTheme(
@@ -52,7 +52,20 @@ export const Home: React.FC = () => {
     }
   };
 
-  const handleGifPress = (id: string) =>
+  const handleShareToWhatsApp = async (imageUrl?: string) => {
+    try {
+      const options = {
+        url: imageUrl,
+        message: 'Check out this GIF!',
+      };
+
+      await Share.share(options);
+    } catch (error) {
+      console.error('Error sharing GIF:', error);
+    }
+  };
+
+  const handleGifToggle = (id: string) =>
     setSelectedId(id === selectedId ? null : id);
 
   const renderGifs = ({item}: TGifsItem) => {
@@ -60,16 +73,26 @@ export const Home: React.FC = () => {
     const source = isSelected
       ? item.images.original.url
       : item.images.preview.mp4;
+
     return (
-      <Pressable
-        style={styles.gifsContainer}
-        onPress={() => handleGifPress(item.id)}>
-        <FastImage
-          style={styles.gif}
-          source={{uri: source}}
-          resizeMode={FastImage.resizeMode.contain}
-        />
-      </Pressable>
+      <View>
+        <Pressable
+          style={styles.gifsContainer}
+          onPress={() => handleGifToggle(item.id)}>
+          <FastImage
+            style={styles.gif}
+            source={{uri: source}}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        </Pressable>
+        <View style={styles.btnContainer}>
+          <CustomButton
+            isOutline={true}
+            onClick={() => handleShareToWhatsApp(source)}
+            title="Share GIF"
+          />
+        </View>
+      </View>
     );
   };
 
